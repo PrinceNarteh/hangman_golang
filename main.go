@@ -8,47 +8,52 @@ import (
 )
 
 var (
-	word = "Secret"
+	word         = "Secret"
 	allow_errors = 7
-	guesses = []rune{'e'}
-	done = false
+	guesses      = []rune{'e'}
+	done         = false
+	reader       = bufio.NewReader(os.Stdin)
 )
 
 func main() {
-	fmt.Println(done)
-	
+
 	for !done {
 		for _, letter := range word {
-			if contains(letter, &guesses) {
+			if contains(letter, guesses) {
 				fmt.Print(string(letter))
 			} else {
 				fmt.Print("_")
 			}
 		}
-		done = true
-		
+
 		char := getUserInput()
 		guesses = append(guesses, char)
-		fmt.Println(guesses)
+		if !contains(char, []rune(word)) {
+			allow_errors -= 1
+			if allow_errors == 0 {
+				break
+			}
+		}
+
+		done = true
 	}
 }
 
-func contains(str rune, arr *[]rune) bool {
-	for _, v := range *arr {
+func contains(str rune, arr []rune) bool {
+	for _, v := range arr {
 		if v == str {
 			return true
 		}
 	}
-	return false 
+	return false
 }
 
 func getUserInput() rune {
-	reader := bufio.NewReader(os.Stdin)
 	input, err := reader.ReadString('\n')
-	if err !=nil {
+	if err != nil {
 		fmt.Println(err)
 	}
-	input = strings.Replace(input, "\n", "", -1)
+	input = strings.ToLower(input)
 	firstCharacter := input[0]
 	return rune(firstCharacter)
 }
