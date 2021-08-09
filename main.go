@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 )
 
 var (
@@ -22,8 +25,11 @@ func main() {
 				fmt.Print("_")
 			}
 		}
-
 		done = true
+		
+		char := getUserInput()
+		guesses = append(guesses, char)
+		fmt.Println(guesses)
 	}
 }
 
@@ -34,4 +40,15 @@ func contains(str rune, arr *[]rune) bool {
 		}
 	}
 	return false 
+}
+
+func getUserInput() rune {
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+	if err !=nil {
+		fmt.Println(err)
+	}
+	input = strings.Replace(input, "\n", "", -1)
+	firstCharacter := input[0]
+	return rune(firstCharacter)
 }
